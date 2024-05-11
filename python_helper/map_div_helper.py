@@ -1,9 +1,25 @@
+import logging
 import os
+import sys
 import typing
 
-from PyQt5.QtCore import QProcess, pyqtSignal
-import logging
 import yaml
+from PyQt5.QtCore import QProcess, pyqtSignal
+
+
+def load_data(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = file.read()
+        return data
+    except FileNotFoundError:
+        return "File not found."
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 def create_temp_yaml_cfg(cfg: dict):
@@ -52,7 +68,21 @@ class PointCloudDividerProcess(QProcess):
         return map_divider_args, PCD_FILES
 
     def start_div(self, input_files, output_folder, cfg):
-        pointcloud_map_divider_path = '/home/jimmy/CLionProjects/ag/pointcloud_divider/cmake-build-release/pointcloud_divider'
+        # # pointcloud_map_divider_path = '/home/jimmy/CLionProjects/ag/pointcloud_divider/cmake-build-release/pointcloud_divider'
+
+        pointcloud_map_divider_path = resource_path("bin/pointcloud_divider")
+
+        # check if the executable exists
+        if not os.path.exists(pointcloud_map_divider_path):
+            self.error_msg_signal.emit(f"{pointcloud_map_divider_path} not found")
+
+            dev_path = '../cmake-build-release/pointcloud_divider'
+            if os.path.exists(dev_path):
+                self.error_msg_signal.emit(f"pointcloud_map_divider found in {dev_path}, which is ok for development")
+                pointcloud_map_divider_path = dev_path
+            else:
+                return
+
         args, self.to_do_list = self._form_args(input_files, output_folder, cfg)
         logging.info(f"Start dividing pointclouds: {args}")
         super().start(pointcloud_map_divider_path, args)

@@ -40,6 +40,10 @@ class FileListManager(QWidget):
     def get_files(self):
         return [self.listWidget.item(i).text() for i in range(self.listWidget.count())]
 
+    def add_init_files(self, files):
+        for file_path in files:
+            self.listWidget.addItem(file_path)
+
     def add_files(self):
         files_path, _ = QFileDialog.getOpenFileNames(self, 'Select File', filter=self.file_filter)
         for file_path in files_path:

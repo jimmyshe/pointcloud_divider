@@ -1,3 +1,5 @@
+import datetime
+import logging
 import os
 
 from PyQt5.QtWidgets import (
@@ -10,7 +12,7 @@ from map_div_helper import PointCloudDividerProcess
 from file_list_widget import FileListManager
 from PyQt5.QtWidgets import QApplication, QVBoxLayout, QPushButton, QWidget
 
-from python_helper.dir_picker import DirectoryPicker
+from dir_picker import DirectoryPicker
 from cfg_editor import ConfigEditor
 
 
@@ -21,6 +23,10 @@ class PointCloudDivider(QWidget):
         # Variables
         self.output_folder = None
         self.initUI()
+
+        self.input_file_manager.add_init_files([
+            '/home/jimmy/ros_dev/zj_atv_ws/src/beamng_autoware/config/map/west_cost_dynamic/pointcloud_map/pointcloud_map_00000.pcd',
+        ])
 
         # set a default out folder
         test_dir = os.path.abspath('test_dir')
@@ -80,11 +86,13 @@ class PointCloudDivider(QWidget):
         self.progress_bar.setValue(finished)
 
     def handle_start(self):
+        logging.info('Start running...')
         self.run_button.setText('Running...')
         self.run_button.setEnabled(False)
         self.logtext.appendPlainText('Start running...')
 
     def handle_finish(self):
+        logging.info('Finished.')
         self.run_button.setText('Run')
         self.run_button.setEnabled(True)
         self.handle_progress(0, 1)
@@ -112,7 +120,7 @@ class PointCloudDivider(QWidget):
 
         cfg = self.config_editor.get_config()
 
-        self.logtext.appendPlainText(f"use config: {cfg}")
+        self.logtext.appendPlainText(f"{datetime.datetime.now()} use config: {cfg}")
 
         self.worker.start_div(input_files, output_folder, cfg)
 

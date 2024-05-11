@@ -24,14 +24,13 @@ class PointCloudDivider(QWidget):
         self.output_folder = None
         self.initUI()
 
-        self.input_file_manager.add_init_files([
-            '/home/jimmy/ros_dev/zj_atv_ws/src/beamng_autoware/config/map/west_cost_dynamic/pointcloud_map/pointcloud_map_00000.pcd',
-        ])
-
+        # self.input_file_manager.add_init_files([
+        #     '/home/jimmy/ros_dev/zj_atv_ws/src/beamng_autoware/config/map/west_cost_dynamic/pointcloud_map/pointcloud_map_00000.pcd',
+        # ])
         # set a default out folder
-        test_dir = os.path.abspath('test_dir')
-        if os.path.exists(test_dir):
-            self.output_folder_picker.setDirectory(test_dir)
+        # test_dir = os.path.abspath('test_dir')
+        # if os.path.exists(test_dir):
+        #     self.output_folder_picker.setDirectory(test_dir)
 
         self.worker = PointCloudDividerProcess()
         # connect signals of worker

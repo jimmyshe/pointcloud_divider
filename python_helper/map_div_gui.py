@@ -107,7 +107,7 @@ class PointCloudDivider(QWidget):
             QMessageBox.warning(self, 'Warning', 'Please add input files first.')
             return
 
-        output_folder = self.output_folder_picker.getDirectory()
+        output_folder = self.output_folder_picker.get_directory()
 
         if output_folder is None:
             QMessageBox.warning(self, 'Warning', 'Please choose output folder first.')

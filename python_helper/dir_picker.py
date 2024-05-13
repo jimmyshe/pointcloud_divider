@@ -27,7 +27,7 @@ class DirectoryPicker(QWidget):
         self.dir = dir_path
         self.dir_label.setText(f'Selected {self.dir_key_name} Directory: {dir_path}')
 
-    def getDirectory(self) -> typing.Optional[str]:
+    def get_directory(self) -> typing.Optional[str]:
         if self.dir is None:
             return None
         if not os.path.exists(self.dir):
